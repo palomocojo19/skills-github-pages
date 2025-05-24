@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía: Entrenamiento Ciclista Personalizado con VFC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Application Structure Plan: 
+        1. Hero: Título atractivo y promesa central.
+        2. Problema: Limitaciones del entrenamiento genérico (Diagrama simple HTML/CSS).
+        3. Solución VFC: Explicación de la VFC y su medición (Texto + Gráfico conceptual VFC diaria con Chart.js).
+        4. Metodología: Cómo se usa la VFC en el entrenamiento (Diagrama de flujo HTML/CSS + Gráfico comparativo con Chart.js).
+        5. Beneficios: Destacados en tarjetas visuales (HTML/CSS + Iconos Unicode).
+        6. Servicios: Lista clara de lo que se ofrece (HTML/CSS).
+        7. Consejos VFC (NUEVO): Generador de consejos de entrenamiento/recuperación con LLM.
+        8. CTA: Llamada a la acción e información de contacto.
+        Este flujo narrativo está diseñado para guiar al usuario desde la identificación de un problema común hasta la comprensión de una solución específica y sus ventajas, culminando en una oferta clara. Se prioriza la facilidad de comprensión y el engagement visual.
+    -->
+    <!-- Visualization & Content Choices:
+        - Diagrama "Ciclo de Frustración" (HTML/CSS): Goal: Organizar/Informar. Muestra problema. HTML/CSS. NO SVG.
+        - Iconos VFC (Unicode): Goal: Informar. Ilustra aspectos de la VFC. Unicode. NO SVG.
+        - Gráfico "VFC Diaria" (Chart.js Line): Goal: Cambiar/Informar. Muestra variabilidad. Canvas. NO SVG.
+        - Diagrama "Ciclo Adaptativo VFC" (HTML/CSS): Goal: Organizar/Informar. Explica proceso. HTML/CSS. NO SVG.
+        - Gráfico "Comparativa Plan Genérico vs VFC" (Chart.js Bar): Goal: Comparar. Destaca beneficios. Canvas. NO SVG.
+        - Tarjetas de Beneficios (HTML/CSS + Unicode): Goal: Informar. Resalta ventajas. HTML/CSS + Unicode. NO SVG.
+        - Lista de Servicios (HTML/CSS): Goal: Informar. Detalla oferta. HTML/CSS. NO SVG.
+        - Generador de Consejos (LLM): Goal: Informar/Personalizar. Proporciona consejos dinámicos. Gemini API.
+    -->
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #FFFFFF; /* Background */
+            color: #333333; /* Neutral Dark */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Base height, can be overridden by Tailwind */
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .section-title {
+            font-size: 2rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #00A0B0; /* Secondary - Deep Teal */
+            margin-bottom: 1.5rem; /* mb-6 */
+            text-align: center;
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #FF6F61; /* Primary - Vibrant Coral */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .card {
+            background-color: #F5F5F5; /* Neutral Light */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1.5rem; /* p-6 */
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -2px rgba(0,0,0,0.05); /* shadow-lg */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+        .btn-primary {
+            background-color: #FF6F61; /* Primary - Vibrant Coral */
+            color: #FFFFFF;
+            padding: 0.75rem 2rem; /* py-3 px-8 */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 600; /* font-semibold */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-primary:hover {
+            background-color: #E65A50; /* Darker Coral */
+            transform: scale(1.05);
+        }
+        .flow-step {
+            background-color: #E0F7FA; /* Light Teal */
+            color: #00796B; /* Darker Teal text */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            border: 1px solid #B2EBF2; /* Lighter Teal border */
+        }
+        .flow-arrow {
+            font-size: 2rem;
+            color: #00A0B0; /* Secondary - Deep Teal */
+            align-self: center;
+            margin: 0.5rem 0;
+        }
+        .benefit-icon {
+            font-size: 2.5rem;
+            color: #FFC300; /* Accent - Bright Yellow */
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+    </style>
+</head>
+<body class="leading-relaxed">
+
+    <section class="bg-gradient-to-br from-[#FF6F61] to-[#FF8C7A] text-white py-16 px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto text-center">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-6">¡Revoluciona Tu Ciclismo con Entrenamiento Basado en VFC!</h1>
+            <p class="text-xl sm:text-2xl mb-8 max-w-3xl mx-auto">
+                Descubre cómo la Variabilidad de Frecuencia Cardíaca (VFC) personaliza tu camino hacia el máximo rendimiento y bienestar.
+            </p>
+            <a href="#contacto-final" class="btn-primary text-lg shadow-xl">Quiero Saber Más</a>
+        </div>
+    </section>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+
+        <section id="problema" class="my-12">
+            <h2 class="section-title">¿Planes Genéricos? ¡Tu Cuerpo Merece Más!</h2>
+            <p class="text-center text-lg text-[#777777] mb-10 max-w-2xl mx-auto">
+                Los entrenamientos estándar no consideran tus fluctuaciones diarias. Estrés, sueño, recuperación... todo afecta. Seguir un plan rígido puede llevarte al estancamiento o, peor, a lesiones.
+            </p>
+            <div class="card md:w-3/4 mx-auto">
+                <h3 class="subsection-title text-center">El Ciclo de Frustración del Plan Genérico</h3>
+                <div class="flex flex-col md:flex-row justify-around items-center space-y-4 md:space-y-0 md:space-x-4 p-4">
+                    <div class="flow-step w-full md:w-auto">Plan Rígido</div>
+                    <div class="flow-arrow md:rotate-0 rotate-90">&rarr;</div>
+                    <div class="flow-step w-full md:w-auto">Ignora Señales Corporales</div>
+                    <div class="flow-arrow md:rotate-0 rotate-90">&rarr;</div>
+                    <div class="flow-step w-full md:w-auto">Riesgo (Lesión/Fatiga)</div>
+                    <div class="flow-arrow md:rotate-0 rotate-90">&rarr;</div>
+                    <div class="flow-step w-full md:w-auto">Estancamiento</div>
+                </div>
+                <p class="text-sm text-center mt-6 text-[#777777]">Rompe este ciclo con un enfoque verdaderamente personalizado.</p>
+            </div>
+        </section>
+
+        <section id="solucion-vfc" class="my-16 py-12 bg-[#F5F5F5] rounded-xl">
+            <h2 class="section-title">La Clave Está en Tu Corazón: Entendiendo la VFC</h2>
+            <p class="text-center text-lg text-[#777777] mb-10 max-w-2xl mx-auto">
+                La Variabilidad de Frecuencia Cardíaca (VFC) es tu ventana personal al estado de tu cuerpo. No es solo cuánto late tu corazón, sino cómo varía el tiempo entre cada latido.
+            </p>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="px-4">
+                    <h3 class="subsection-title">¿Qué Mide la VFC?</h3>
+                    <ul class="space-y-3 text-lg">
+                        <li class="flex items-start"><span class="text-[#FF6F61] mr-2 text-2xl">💓</span> Equilibrio del Sistema Nervioso Autónomo.</li>
+                        <li class="flex items-start"><span class="text-[#FF6F61] mr-2 text-2xl">🧘</span> Capacidad de Recuperación.</li>
+                        <li class="flex items-start"><span class="text-[#FF6F61] mr-2 text-2xl">⚡</span> Niveles de Estrés Fisiológico.</li>
+                        <li class="flex items-start"><span class="text-[#FF6F61] mr-2 text-2xl">🚴</span> Disposición para Entrenar.</li>
+                    </ul>
+                    <p class="mt-6 text-[#777777]">Medir tu VFC diariamente nos da información precisa para ajustar tu entrenamiento.</p>
+                </div>
+                <div class="card">
+                    <h3 class="subsection-title text-center">Tu VFC Diaria: Un Indicador Dinámico</h3>
+                    <div class="chart-container h-64 sm:h-72">
+                        <canvas id="vfcDiariaChart"></canvas>
+                    </div>
+                    <p class="text-sm text-center mt-4 text-[#777777]">Tu VFC fluctúa, reflejando cómo tu cuerpo se adapta. Entender estas variaciones es clave.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="metodologia" class="my-16">
+            <h2 class="section-title">Mi Enfoque: Entrenamiento Inteligente, Resultados Reales</h2>
+            <p class="text-center text-lg text-[#777777] mb-10 max-w-2xl mx-auto">
+                Utilizo la ciencia de la VFC para crear un plan dinámico. Tus mediciones diarias guían cada paso, asegurando que entrenes de la forma más efectiva y segura posible.
+            </p>
+            <div class="grid md:grid-cols-2 gap-12 items-start">
+                <div class="card">
+                    <h3 class="subsection-title text-center">Ciclo de Entrenamiento Adaptativo con VFC</h3>
+                    <div class="space-y-3">
+                        <div class="flow-step">1. Medir VFC Matutina</div>
+                        <div class="flow-arrow text-center">&darr;</div>
+                        <div class="flow-step">2. Analizar Datos y Disposición</div>
+                        <div class="flow-arrow text-center">&darr;</div>
+                        <div class="flow-step">3. Personalizar Sesión del Día</div>
+                        <div class="flow-arrow text-center">&darr;</div>
+                        <div class="flow-step">4. Entrenar con Propósito</div>
+                        <div class="flow-arrow text-center">&darr;</div>
+                        <div class="flow-step">5. Optimizar Recuperación</div>
+                    </div>
+                     <p class="text-sm text-center mt-6 text-[#777777]">Un ciclo continuo de adaptación y mejora.</p>
+                </div>
+                <div class="card">
+                    <h3 class="subsection-title text-center">Impacto: Plan Genérico vs. Plan VFC</h3>
+                    <div class="chart-container h-80 sm:h-96">
+                        <canvas id="comparativaPlanChart"></canvas>
+                    </div>
+                    <p class="text-sm text-center mt-4 text-[#777777]">Un plan adaptado a tu VFC optimiza tu progreso y minimiza riesgos.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="beneficios" class="my-16 py-12 bg-gradient-to-r from-[#00A0B0] to-[#007C8A] text-white rounded-xl">
+            <h2 class="section-title !text-white">Pedalea Hacia Tus Metas: Beneficios Comprobados</h2>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
+                <div class="bg-white/20 p-6 rounded-lg text-center backdrop-blur-sm">
+                    <span class="benefit-icon">🎯</span>
+                    <h3 class="text-xl font-semibold mb-2">Individualización Total</h3>
+                    <p class="text-sm">Entrenamientos que realmente se ajustan a ti, día a día.</p>
+                </div>
+                <div class="bg-white/20 p-6 rounded-lg text-center backdrop-blur-sm">
+                    <span class="benefit-icon">📈</span>
+                    <h3 class="text-xl font-semibold mb-2">Optimización de Carga</h3>
+                    <p class="text-sm">Ni mucho, ni poco. Justo lo que necesitas para progresar.</p>
+                </div>
+                <div class="bg-white/20 p-6 rounded-lg text-center backdrop-blur-sm">
+                    <span class="benefit-icon">🛡️</span>
+                    <h3 class="text-xl font-semibold mb-2">Prevención de Lesiones</h3>
+                    <p class="text-sm">Reduce el riesgo escuchando las señales tempranas de tu cuerpo.</p>
+                </div>
+                <div class="bg-white/20 p-6 rounded-lg text-center backdrop-blur-sm">
+                    <span class="benefit-icon">💪</span>
+                    <h3 class="text-xl font-semibold mb-2">Mejor Recuperación</h3>
+                    <p class="text-sm">Aprende a recuperarte mejor para rendir más y de forma consistente.</p>
+                </div>
+                <div class="bg-white/20 p-6 rounded-lg text-center backdrop-blur-sm">
+                    <span class="benefit-icon">🚀</span>
+                    <h3 class="text-xl font-semibold mb-2">Adaptación Superior</h3>
+                    <p class="text-sm">Tu cuerpo se adapta más eficientemente a los estímulos correctos.</p>
+                </div>
+                 <div class="bg-white/20 p-6 rounded-lg text-center backdrop-blur-sm">
+                    <span class="benefit-icon">🧠</span>
+                    <h3 class="text-xl font-semibold mb-2">Mayor Conciencia</h3>
+                    <p class="text-sm">Conoce tu cuerpo como nunca antes y toma decisiones informadas.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="servicios" class="my-16">
+            <h2 class="section-title">Tu Paquete Completo Hacia el Éxito</h2>
+            <p class="text-center text-lg text-[#777777] mb-10 max-w-2xl mx-auto">
+                Te ofrezco un servicio integral para que solo te preocupes de pedalear y disfrutar del proceso.
+            </p>
+            <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                <div class="card !bg-white border-l-4 border-[#FF6F61]">
+                    <h4 class="font-semibold text-lg text-[#FF6F61] mb-1">Planificación Diaria Personalizada</h4>
+                    <p class="text-sm text-[#777777]">Entrenamiento específico cada día, ajustado a tu VFC y calendario.</p>
+                </div>
+                <div class="card !bg-white border-l-4 border-[#00A0B0]">
+                    <h4 class="font-semibold text-lg text-[#00A0B0] mb-1">Evaluación Inicial Detallada</h4>
+                    <p class="text-sm text-[#777777]">Para conocer tus objetivos, historial y punto de partida.</p>
+                </div>
+                <div class="card !bg-white border-l-4 border-[#FFC300]">
+                    <h4 class="font-semibold text-lg text-[#FFC300] mb-1">Protocolo VFC Claro y Sencillo</h4>
+                    <p class="text-sm text-[#777777]">Te guiaré para que midas tu VFC de forma precisa.</p>
+                </div>
+                <div class="card !bg-white border-l-4 border-[#FF6F61]">
+                    <h4 class="font-semibold text-lg text-[#FF6F61] mb-1">Análisis Constante de Datos</h4>
+                    <p class="text-sm text-[#777777]">Interpretamos tu VFC y datos de entrenamiento para optimizar.</p>
+                </div>
+                <div class="card !bg-white border-l-4 border-[#00A0B0]">
+                    <h4 class="font-semibold text-lg text-[#00A0B0] mb-1">Seguimiento y Feedback Continuo</h4>
+                    <p class="text-sm text-[#777777]">Comunicación constante para resolver dudas y ajustar el plan.</p>
+                </div>
+                <div class="card !bg-white border-l-4 border-[#FFC300]">
+                    <h4 class="font-semibold text-lg text-[#FFC300] mb-1">Asesoramiento Integral</h4>
+                    <p class="text-sm text-[#777777]">Sobre nutrición, recuperación, técnica y estrategia.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="consejos-vfc" class="my-16 py-12 bg-[#F5F5F5] rounded-xl">
+            <h2 class="section-title">✨ Consejos del Día con VFC ✨</h2>
+            <p class="text-center text-lg text-[#777777] mb-10 max-w-2xl mx-auto">
+                Simula tu estado de VFC y recibe un consejo de entrenamiento o recuperación personalizado, generado por IA.
+            </p>
+            <div class="card max-w-xl mx-auto p-6">
+                <h3 class="subsection-title text-center">¿Cuál es tu VFC hoy?</h3>
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
+                    <select id="hrvStateSelect" class="block w-full sm:w-auto px-4 py-2 border border-[#777777] rounded-md bg-white text-[#333333] focus:outline-none focus:ring-[#FF6F61] focus:border-[#FF6F61]">
+                        <option value="optima">VFC Óptima</option>
+                        <option value="normal">VFC Normal</option>
+                        <option value="baja">VFC Baja</option>
+                    </select>
+                    <button id="generateTipBtn" class="btn-primary w-full sm:w-auto">
+                        ✨ Generar Consejo ✨
+                    </button>
+                </div>
+                <div id="tipResult" class="mt-6 p-4 bg-white rounded-md border border-[#00A0B0] text-[#333333] text-center min-h-[60px] flex items-center justify-center">
+                    <p class="text-lg text-[#777777]">Tu consejo aparecerá aquí.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contacto-final" class="my-16 py-16 bg-[#333333] text-white rounded-xl">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-6 text-[#FFC300]">¡Transforma Tu Entrenamiento Hoy Mismo!</h2>
+                <p class="text-lg sm:text-xl mb-8 max-w-2xl mx-auto">
+                    Si estás listo para dejar de adivinar y empezar a entrenar de forma verdaderamente inteligente y personalizada, contáctame.
+                </p>
+                <a href="https://wa.me/34644373734?text=Hola%2C%20estoy%20interesado%20en%20el%20entrenamiento%20ciclista%20con%20VFC." class="btn-primary text-lg shadow-xl mb-6" target="_blank" rel="noopener noreferrer">Envíame un mensaje por WhatsApp</a>
+                <div class="mt-8 text-lg">
+                    <p class="font-semibold">Pablo Ruiz</p>
+                    
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-[#F5F5F5] text-[#777777] py-8 text-center">
+        <p>&copy; <span id="currentYear"></span> Entrenamiento Ciclista VFC. Todos los derechos reservados.</p>
+        <p class="text-xs">Infografía diseñada para ilustrar los beneficios del entrenamiento personalizado.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const primaryColor = '#FF6F61';
+        const secondaryColor = '#00A0B0';
+        const accentColor = '#FFC300';
+        const neutralDark = '#333333';
+        const neutralMedium = '#777777';
+
+        function processLabels(labels) {
+            return labels.map(label => {
+                if (typeof label === 'string' && label.length > 16) {
+                    const words = label.split(' ');
+                    const newLabel = [];
+                    let currentLine = '';
+                    words.forEach(word => {
+                        if ((currentLine + word).length > 16 && currentLine.length > 0) {
+                            newLabel.push(currentLine.trim());
+                            currentLine = word + ' ';
+                        } else {
+                            currentLine += word + ' ';
+                        }
+                    });
+                    newLabel.push(currentLine.trim());
+                    return newLabel;
+                }
+                return label;
+            });
+        }
+        
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            } else {
+                              return label;
+                            }
+                        }
+                    }
+                },
+                legend: {
+                    labels: {
+                        color: neutralDark,
+                        font: { size: 12 }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: neutralMedium, font: { size: 10 } },
+                    grid: { color: '#E0E0E0' }
+                },
+                x: {
+                    ticks: { color: neutralMedium, font: { size: 10 } },
+                    grid: { display: false }
+                }
+            }
+        };
+
+        // VFC Diaria Chart (Line)
+        const vfcDiariaCtx = document.getElementById('vfcDiariaChart').getContext('2d');
+        new Chart(vfcDiariaCtx, {
+            type: 'line',
+            data: {
+                labels: processLabels(['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']),
+                datasets: [{
+                    label: 'Nivel VFC (Conceptual)',
+                    data: [65, 75, 55, 70, 80, 60, 72], // Datos ilustrativos
+                    borderColor: primaryColor,
+                    backgroundColor: primaryColor + '33', // Primary con alpha
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: primaryColor,
+                }]
+            },
+            options: {
+                ...commonChartOptions,
+                scales: {
+                     ...commonChartOptions.scales,
+                     y: { ...commonChartOptions.scales.y, title: { display: true, text: 'Nivel VFC (ms)', color: neutralMedium, font: {size: 10 } } }
+                }
+            }
+        });
+
+        // Comparativa Plan Chart (Bar)
+        const comparativaPlanCtx = document.getElementById('comparativaPlanChart').getContext('2d');
+        new Chart(comparativaPlanCtx, {
+            type: 'bar',
+            data: {
+                labels: processLabels(['Progresión Óptima', 'Riesgo de Lesión', 'Motivación Constante']),
+                datasets: [
+                    {
+                        label: 'Plan Genérico',
+                        data: [60, 70, 50], // Datos ilustrativos
+                        backgroundColor: neutralMedium + 'AA',
+                        borderColor: neutralMedium,
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Plan Guiado por VFC',
+                        data: [90, 30, 85], // Datos ilustrativos
+                        backgroundColor: secondaryColor + 'AA',
+                        borderColor: secondaryColor,
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                ...commonChartOptions,
+                scales: {
+                    ...commonChartOptions.scales,
+                    y: { ...commonChartOptions.scales.y, title: { display: true, text: 'Resultado / Nivel (Conceptual)', color: neutralMedium, font: {size: 10 } }, max: 100 }
+                }
+            }
+        });
+
+        // Gemini API Integration for Training Tips
+        const hrvStateSelect = document.getElementById('hrvStateSelect');
+        const generateTipBtn = document.getElementById('generateTipBtn');
+        const tipResult = document.getElementById('tipResult');
+
+        generateTipBtn.addEventListener('click', async () => {
+            const hrvState = hrvStateSelect.value;
+            let prompt = '';
+
+            switch (hrvState) {
+                case 'optima':
+                    prompt = 'Genera un consejo de entrenamiento ciclista breve y motivador para un día con VFC óptima, enfocado en aprovechar la buena recuperación. Máximo 2 frases.';
+                    break;
+                case 'normal':
+                    prompt = 'Genera un consejo de entrenamiento ciclista breve y equilibrado para un día con VFC normal, sugiriendo un enfoque moderado. Máximo 2 frases.';
+                    break;
+                case 'baja':
+                    prompt = 'Genera un consejo de recuperación o entrenamiento ligero para un ciclista con VFC baja, enfatizando la importancia del descanso y la escucha corporal. Máximo 2 frases.';
+                    break;
+            }
+
+            tipResult.innerHTML = '<p class="text-lg text-[#777777]">Generando consejo... ✨</p>';
+            generateTipBtn.disabled = true;
+
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    tipResult.innerHTML = `<p class="text-lg text-[#333333]">${text}</p>`;
+                } else {
+                    tipResult.innerHTML = '<p class="text-lg text-[#FF6F61]">Error: No se pudo generar el consejo. Intenta de nuevo.</p>';
+                }
+            } catch (error) {
+                console.error('Error al llamar a la API de Gemini:', error);
+                tipResult.innerHTML = '<p class="text-lg text-[#FF6F61]">Error de conexión. Asegúrate de estar en línea.</p>';
+            } finally {
+                generateTipBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
